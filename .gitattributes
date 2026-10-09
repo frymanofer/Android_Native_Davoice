@@ -1,0 +1,4 @@
+# Models and AARs are large binaries: store them with Git LFS (git lfs install).
+*.dm filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.aar filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,22 @@
+# Gradle / Android Studio
+.gradle/
+build/
+/app/build/
+.idea/
+*.iml
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local, machine-specific (holds sdk.dir and your Gemini key)
+local.properties
+
+# macOS
+.DS_Store
+
+# Build artifacts and editor/profiler files
+*.apk
+*.aab
+*.hprof
+.vscode/

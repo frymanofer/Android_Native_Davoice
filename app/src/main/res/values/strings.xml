@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DaVoice Demo</string>
+    <string name="skip_narration">Skip Narration</string>
+    <string name="back">Back</string>
+    <string name="choose_voice">Choose a voice</string>
+    <string name="sv_title">Speaker verification</string>
+    <string name="sv_use_saved">Use saved speaker</string>
+    <string name="sv_redo">Create new speaker signature</string>
+    <string name="sv_skip">Skip</string>
+    <string name="sv_continue">Continue</string>
+    <string name="choose_mode">Choose what to test</string>
+    <string name="type_hint">Type something for the voice to say</string>
+    <string name="speak">Speak</string>
+    <string name="share_recording">Share wake-word audio</string>
+    <string name="local_model">Model</string>
+    <string name="mic_needed">The microphone permission is needed for the voice demo.</string>
+    <string name="open_settings">Open settings</string>
+    <string name="try_again">Try again</string>
+</resources>

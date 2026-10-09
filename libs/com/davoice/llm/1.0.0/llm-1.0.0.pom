@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Your Maven coordinates -->
+  <groupId>com.davoice</groupId>
+  <artifactId>llm</artifactId>
+  <version>1.0.0</version>
+  <packaging>aar</packaging>
+
+  <name>DaVoice LLM</name>
+  <description>
+    On-device LLM inference library by DaVoice for Android, packaged as an AAR.
+  </description>
+  <url>https://davoice.io</url>
+
+  <licenses>
+    <license>
+      <name>Proprietary License</name>
+      <url>https://davoice.io/license</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>davoice</id>
+      <name>DaVoice Team</name>
+      <email>support@davoice.io</email>
+      <organization>DaVoice LTD</organization>
+      <organizationUrl>https://davoice.io</organizationUrl>
+    </developer>
+  </developers>
+
+</project>

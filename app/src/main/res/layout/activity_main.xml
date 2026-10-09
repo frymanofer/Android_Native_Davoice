@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One screen; VoiceDemo's UiState.screen decides which panel is visible. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/text"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <!-- What the demo is doing / saying -->
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/surface"
+                android:padding="14dp"
+                android:textColor="@color/text"
+                android:textSize="17sp" />
+
+            <!-- What is being heard right now -->
+            <TextView
+                android:id="@+id/sentence"
+                style="@style/Body"
+                android:layout_marginTop="8dp"
+                android:textStyle="italic"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/skipNarration"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/skip_narration"
+                android:visibility="gone" />
+
+            <!-- Voice -->
+            <LinearLayout android:id="@+id/panelVoice" style="@style/Panel">
+                <TextView style="@style/PanelTitle" android:text="@string/choose_voice" />
+                <LinearLayout
+                    android:id="@+id/voiceButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- Speaker verification: choice -->
+            <LinearLayout android:id="@+id/panelSvPrompt" style="@style/Panel">
+                <TextView style="@style/PanelTitle" android:text="@string/sv_title" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/svUseSaved"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sv_use_saved" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/svRedo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sv_redo" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/svSkip"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sv_skip" />
+            </LinearLayout>
+
+            <!-- Speaker verification: onboarding progress / live score -->
+            <LinearLayout android:id="@+id/panelSvStatus" style="@style/Panel">
+                <TextView style="@style/PanelTitle" android:text="@string/sv_title" />
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/svProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="5" />
+                <TextView android:id="@+id/svProgressText" style="@style/Body" android:layout_marginTop="6dp" />
+                <TextView
+                    android:id="@+id/svScore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:padding="18dp"
+                    android:textColor="@color/text"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/svContinue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/sv_continue" />
+            </LinearLayout>
+
+            <!-- Mode selection -->
+            <LinearLayout android:id="@+id/panelModes" style="@style/Panel">
+                <TextView style="@style/PanelTitle" android:text="@string/choose_mode" />
+                <LinearLayout
+                    android:id="@+id/modeButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- Type to TTS -->
+            <LinearLayout android:id="@+id/panelTypeToTts" style="@style/Panel">
+                <EditText
+                    android:id="@+id/typeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/surface"
+                    android:gravity="top"
+                    android:hint="@string/type_hint"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:minLines="3"
+                    android:padding="12dp"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/text_muted" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/speakButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/speak" />
+            </LinearLayout>
+
+            <!-- Speech to Text only -->
+            <LinearLayout android:id="@+id/panelSttOnly" style="@style/Panel">
+                <TextView
+                    android:id="@+id/lastSentence"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/surface"
+                    android:minHeight="80dp"
+                    android:padding="14dp"
+                    android:textColor="@color/text"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <!-- AI chat (Gemini or on-device) -->
+            <LinearLayout android:id="@+id/panelChat" style="@style/Panel">
+                <LinearLayout
+                    android:id="@+id/localModelRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/localModelStatus"
+                        style="@style/Body"
+                        android:layout_width="0dp"
+                        android:layout_weight="1" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/localModelPick"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/local_model" />
+                </LinearLayout>
+                <TextView android:id="@+id/chatStatus" style="@style/Body" android:layout_marginTop="6dp" />
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/chatLoading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/chatTranscript"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/surface"
+                    android:lineSpacingExtra="4dp"
+                    android:minHeight="120dp"
+                    android:padding="14dp"
+                    android:textColor="@color/text"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shareRecording"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/share_recording"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/backButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/back"
+        android:visibility="gone" />
+</LinearLayout>

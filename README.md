@@ -63,10 +63,33 @@ cd Android_Native_Davoice
 git lfs pull
 
 cp local.properties.example local.properties   # set sdk.dir (Android Studio does this for you)
-./gradlew :app:installDebug
+./gradlew :app:installFullDebug                 # or :app:installLiteDebug (see Footprint)
 ```
 
-Or open the folder in Android Studio and press Run.
+Or open the folder in Android Studio, pick the **full** or **lite** build variant, and press Run.
+
+### Footprint: full vs lite
+
+The app has two product flavors that differ only in the wake-word engine:
+
+| Flavor | Wake-word engine | Size | Notes |
+|---|---|---|---|
+| **full** | ACL (Arm Compute Library), hardware-accelerated | larger | Lowest CPU/battery per inference. |
+| **lite** | No ACL — CPU/XNNPACK only | **~24 MB smaller** native libs | Slightly more CPU per inference; installs as a separate app (`…​.lite`). |
+
+```bash
+./gradlew :app:assembleFullDebug     # full (ACL) APK
+./gradlew :app:assembleLiteDebug     # lite (low-footprint) APK
+./gradlew :app:installFullDebug      # or installLiteDebug
+```
+
+The flavors pull different wake-word AARs: `full` → `com.davoice:keyworddetection:1.0.0` (ACL), `lite` →
+`com.davoice:keyworddetection-lowfp:1.0.0` (no ACL). Both are in `libs/`. The ACL choice is a build-time toggle in
+the library itself — the low-footprint AAR never calls the ACL execution provider. TTS and the local LLM are the same
+in both flavors. The two apps have different application IDs, so you can install both side by side.
+
+> Regenerating the AARs: in the private `AndroidLibraryCode` repo, `build.sh` builds the regular (ACL) wake-word AAR
+> and `build_lowfp.sh` builds the low-footprint one; `cp_lib.sh` copies both into this repo's `libs/`.
 
 ### License key
 

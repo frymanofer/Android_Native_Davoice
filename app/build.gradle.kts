@@ -28,6 +28,22 @@ android {
         ndk { abiFilters += "arm64-v8a" }
     }
 
+    // Two wake-word footprints. "full" uses the ACL (Arm Compute) build; "lite"
+    // uses the low-footprint no-ACL build (CPU/XNNPACK) -> ~24 MB smaller APK.
+    //   ./gradlew assembleFullDebug   -> full APK
+    //   ./gradlew assembleLiteDebug   -> lite (low-footprint) APK
+    flavorDimensions += "footprint"
+    productFlavors {
+        create("full") {
+            dimension = "footprint"
+        }
+        create("lite") {
+            dimension = "footprint"
+            applicationIdSuffix = ".lite"
+            versionNameSuffix = "-lite"
+        }
+    }
+
     buildFeatures {
         buildConfig = true
         viewBinding = true
@@ -69,7 +85,9 @@ dependencies {
     // DaVoice native libraries (local Maven repo in ../libs, see settings.gradle.kts).
     // keyworddetection also provides ONNX Runtime, which the tts AAR uses at
     // runtime -- include it even if you only need TTS.
-    implementation("com.davoice:keyworddetection:1.0.0")
+    // Wake word: ACL build for "full", no-ACL low-footprint build for "lite".
+    "fullImplementation"("com.davoice:keyworddetection:1.0.0")
+    "liteImplementation"("com.davoice:keyworddetection-lowfp:1.0.0")
     implementation("com.davoice:tts:1.0.0")
     implementation("com.davoice:llm:1.0.0")
 

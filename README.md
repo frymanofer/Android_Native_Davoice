@@ -84,7 +84,7 @@ The app has two product flavors that differ only in the wake-word engine:
 ```
 
 The flavors pull different wake-word AARs: `full` → `com.davoice:keyworddetection:1.0.0` (ACL), `lite` →
-`com.davoice:keyworddetection-lowfp:1.0.0` (no ACL). Both are in `libs/`. The ACL choice is a build-time toggle in
+`com.davoice:keyworddetection-lowfp:1.0.1` (no ACL). Both are in `libs/`. The ACL choice is a build-time toggle in
 the library itself — the low-footprint AAR never calls the ACL execution provider. TTS and the local LLM are the same
 in both flavors. The two apps have different application IDs, so you can install both side by side.
 

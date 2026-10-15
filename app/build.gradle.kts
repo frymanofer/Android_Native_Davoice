@@ -87,7 +87,7 @@ dependencies {
     // runtime -- include it even if you only need TTS.
     // Wake word: ACL build for "full", no-ACL low-footprint build for "lite".
     "fullImplementation"("com.davoice:keyworddetection:1.0.0")
-    "liteImplementation"("com.davoice:keyworddetection-lowfp:1.0.0")
+    "liteImplementation"("com.davoice:keyworddetection-lowfp:1.0.1")
     implementation("com.davoice:tts:1.0.0")
     implementation("com.davoice:llm:1.0.0")
 

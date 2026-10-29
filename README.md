@@ -1,5 +1,7 @@
 # Android Native On-Device Voice AI by DaVoice
 
+[License](LICENSE) · [Model and Voice Asset Notice](MODEL_NOTICES.md)
+
 ### Wake word, speaker verification, speech to text, text to speech and a local LLM. Native Kotlin, no React Native.
 
 By [DaVoice.io](https://davoice.io)

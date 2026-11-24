@@ -507,7 +507,8 @@ class CarAgentApp(private val context: Context, private val scope: CoroutineScop
                 sayWhole(when {
                     st.startsWith("Failed") -> { startWarmUp(); "The on-device model, ${CarModel.DISPLAY_NAME}, failed to load, so I am trying again. Please ask me again in a moment." }
                     st.startsWith("Downloading") -> "The on-device model, ${CarModel.DISPLAY_NAME}, is still downloading. It is ${(modelProgress * 100).toInt()} percent done. Please ask me again when it is ready."
-                    else -> "The on-device model, ${CarModel.DISPLAY_NAME}, is still loading. Please ask me again in a moment."
+                    // no warm-up running (e.g. it was cancelled): start it again (startWarmUp does nothing while one runs)
+                    else -> { startWarmUp(); "The on-device model, ${CarModel.DISPLAY_NAME}, is still loading. Please ask me again in a moment." }
                 })
                 return
             }

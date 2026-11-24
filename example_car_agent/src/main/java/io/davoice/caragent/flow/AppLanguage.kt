@@ -6,14 +6,14 @@ package io.davoice.caragent.flow
 data class AppLanguageInfo(val id: String, val label: String, val sttLocale: String, val llmReplyInstruction: String, val hidden: Boolean = false)
 
 val appLanguageInfos = listOf(
-    // Order = voice quality: English; Spanish, Italian, German, Dutch; Brazilian Portuguese; Greek, Swedish, Danish; French, European
-    // Portuguese. Hebrew is hidden.
+    // Order: English, then Brazilian Portuguese (the two tuned languages); then by voice quality: Spanish, Italian, German, Dutch; Greek,
+    // Swedish, Danish; French, European Portuguese. Hebrew is hidden.
     AppLanguageInfo("en", "English", "en-US", "The user speaks English. Always reply in English."),
+    AppLanguageInfo("pt-BR", "Português do Brasil (Brazilian Portuguese)", "pt-BR", "Important: always reply in Brazilian Portuguese (pt-BR). Sempre responda em português do Brasil."),
     AppLanguageInfo("es", "Español (Spanish)", "es-ES", "The user speaks Spanish. Always reply in Spanish."),
     AppLanguageInfo("it", "Italiano (Italian)", "it-IT", "The user speaks Italian. Always reply in Italian."),
     AppLanguageInfo("de", "Deutsch (German)", "de-DE", "The user speaks German. Always reply in German."),
     AppLanguageInfo("nl", "Nederlands (Dutch)", "nl-NL", "The user speaks Dutch. Always reply in Dutch."),
-    AppLanguageInfo("pt-BR", "Português do Brasil (Brazilian Portuguese)", "pt-BR", "Important: always reply in Brazilian Portuguese (pt-BR). Sempre responda em português do Brasil."),
     AppLanguageInfo("el", "Ελληνικά (Greek)", "el-GR", "The user speaks Greek. Always reply in Greek. Απάντα πάντα στα ελληνικά."),
     AppLanguageInfo("sv", "Svenska (Swedish)", "sv-SE", "The user speaks Swedish. Always reply in Swedish. Svara alltid på svenska."),
     AppLanguageInfo("da", "Dansk (Danish)", "da-DK", "The user speaks Danish. Always reply in Danish. Svar altid på dansk."),

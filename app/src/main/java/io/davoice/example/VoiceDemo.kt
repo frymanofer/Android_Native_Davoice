@@ -174,13 +174,13 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
 
     /** Speech.initAll + the selected voice; recognition left paused. */
     private suspend fun initializeSpeech() {
-        speech.pauseRecognition()
+        speech.pauseSpeechRecognition()
         val model = _state.value.voice.model()
         val path = installedPath(model.assetPath)
-        speech.initAll(path, enrollmentJson)
+        speech.initAll(DemoConfig.STT_LOCALE, path, enrollmentJson)
         loadedModelPath = path
         applySelectedVoice()
-        speech.pauseRecognition()
+        speech.pauseSpeechRecognition()
     }
 
     /** Model changed (voice or speaker enrollment): reload speech. Wake word keeps running. */
@@ -227,7 +227,7 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
             if (voice == narrator) "Awesome, Thanks for choosing to stay with me." else "Awesome, You chose ${voice.displayName}.",
             "The next phase, is setting speaker verification. You can create a new speaker signature, use a saved one, or skip this step.",
         ))
-        runCatching { speech.pauseRecognition() }
+        runCatching { speech.pauseSpeechRecognition() }
 
         // 2) Speaker verification
         val svResult = runSpeakerVerificationSetup()
@@ -308,7 +308,7 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
         narrationInterrupted = false
         ui { copy(narrating = true) }
         try {
-            runCatching { speech.pauseRecognition() }
+            runCatching { speech.pauseSpeechRecognition() }
             applySelectedVoice()
             for (line in lines) {
                 if (skipNarration || narrationInterrupted) break
@@ -341,7 +341,7 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
     }
 
     private suspend fun speakText(text: String) =
-        speech.speak(SpokenText.applyTtsPolicy(text), _state.value.voice.model().speed)
+        speech.speak(SpokenText.applyTtsPolicy(text), DemoConfig.SPEAKER_ID, _state.value.voice.model().speed)
 
     // ================================================================================
     // Wake word
@@ -373,7 +373,7 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
 
         val mode = if (isFirst) {
             ui { copy(mode = null, sentence = "") }
-            runCatching { speech.pauseRecognition() }
+            runCatching { speech.pauseSpeechRecognition() }
             speakNarration(listOf("$name detected."))
             ui { copy(message = "WakeWord '$name' DETECTED") }
             speakNarration(listOf(
@@ -400,9 +400,9 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
         }
         if (withIntro) {
             // Reset the recognizer between sessions (mirrors the RN demo's intro step).
-            runCatching { speech.pauseRecognition() }
+            runCatching { speech.pauseSpeechRecognition() }
             resetTranscript()
-            speech.unpauseRecognition(-1)
+            speech.unPauseSpeechRecognition(-1, timeoutMs = 1500)
             delay(500)
             ui { copy(sentence = "") }
         }
@@ -411,11 +411,11 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
             AppMode.TypeToTTS -> ui { copy(screen = Screen.TypeToTTS, message = "Type to TTS") }
             AppMode.STTOnly -> {
                 ui { copy(screen = Screen.STTOnly, message = "Speak; each sentence appears below.", lastSentSentence = "") }
-                speech.unpauseRecognition(-1)
+                speech.unPauseSpeechRecognition(-1, timeoutMs = 1500)
             }
             else -> {
                 ui { copy(screen = Screen.Combined, message = "Speak; the selected voice repeats what you said.") }
-                speech.unpauseRecognition(-1)
+                speech.unPauseSpeechRecognition(-1, timeoutMs = 1500)
             }
         }
     }
@@ -441,7 +441,7 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
             resetChat()
             runCatching { speech.stopSpeaking() }
             ui { copy(screen = Screen.ChooseMode, sentence = "", message = "Choose what you want to test next.", manualTtsSpeaking = false) }
-            runCatching { speech.pauseRecognition() }
+            runCatching { speech.pauseSpeechRecognition() }
         }
     }
 
@@ -489,10 +489,10 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
             }
             Screen.Combined -> {
                 ui { copy(sentence = "Speaking now: $text") }
-                runCatching { speech.pauseRecognition() }
+                runCatching { speech.pauseSpeechRecognition() }
                 speakText(text)
                 resetTranscript()
-                speech.unpauseRecognition(-1)
+                speech.unPauseSpeechRecognition(-1, timeoutMs = 1500)
                 delay(300)
                 ui { copy(sentence = "") }
             }
@@ -542,7 +542,7 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
         suppressPartialResults = true
         resetTranscript()
         try {
-            speech.unpauseRecognition(-1)
+            speech.unPauseSpeechRecognition(-1, timeoutMs = 1500)
             delay(300)
             ui { copy(chatStatus = "Listening...", sentence = "Listening...") }
         } catch (t: Throwable) {
@@ -583,7 +583,7 @@ class VoiceDemo(context: Context, private val scope: CoroutineScope) {
             )
         }
         try {
-            runCatching { speech.pauseRecognition() }
+            runCatching { speech.pauseSpeechRecognition() }
             if (local && !localLlm.isReady()) {
                 // Don't hold the turn (and the mic) while a multi-GB model downloads.
                 val status = _state.value.localModelStatus

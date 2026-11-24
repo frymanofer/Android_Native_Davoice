@@ -12,7 +12,7 @@ object DemoConfig {
      * for your own key.
      */
     const val DAVOICE_LICENSE_KEY =
-        "MTc5MzQ4NDAwMDAwMA==-cpeHAmR/9wRKvv9rBJ+36JqMUxmXR3RIpi5lK67VsUQ="
+        "MTc5NjA3NjAwMDAwMA==-FmI0i6C8wjKqQwmvi/PAmUy9ayviOGvWhGLFGHZrg9I="
 
     // ---- Wake word -----------------------------------------------------------
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The screens are drawn with Compose; this only sets the window around them (the dark "emerald" background). -->
+    <style name="Theme.CarAgent" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#FF060908</item>
+        <item name="android:statusBarColor">#FF060908</item>
+        <item name="android:navigationBarColor">#FF060908</item>
+    </style>
+</resources>

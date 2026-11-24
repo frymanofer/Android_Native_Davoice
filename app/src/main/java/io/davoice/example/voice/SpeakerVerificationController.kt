@@ -173,6 +173,54 @@ class SpeakerVerificationController(context: Context, private val assets: AssetI
         }
     }
 
+    /** [verifyWavStreaming] result (same keys as React Native). */
+    data class WavVerifyResult(
+        val scoreBest: Float, val scoreMean: Float, val scoreWorst: Float,
+        val isMatch: Boolean, val embeddingDim: Int, val usedSeconds: Float,
+    )
+
+    /**
+     * Verifies a 16 kHz mono 16-bit WAV against [enrollmentJsonOrPath] (the JSON or a
+     * path), streaming it through the engine like live audio: the React Native
+     * `createSpeakerVerificationInstance(id)` + `create(model, enrollment)` +
+     * `verifyWavStreaming(wav)` in one call. [decisionThreshold] defaults to the demo's.
+     */
+    suspend fun verifyWavStreaming(
+        enrollmentJsonOrPath: String,
+        wavPath: String,
+        decisionThreshold: Float = DemoConfig.SV_DECISION_THRESHOLD,
+    ): WavVerifyResult = withContext(Dispatchers.IO) {
+        val cfg = config().apply { this.decisionThreshold = decisionThreshold }
+        val json = File(enrollmentJsonOrPath).takeIf { it.isFile }?.readText() ?: enrollmentJsonOrPath
+        if (cfg.modelPath.endsWith(".dm", ignoreCase = true)) {
+            // The library unpacks .dm models only in the microphone controller's constructor (it rewrites
+            // cfg.modelPath to the plain model); the bare engine would hand the packed file to ONNX Runtime.
+            // A throwaway controller unpacks it without opening the microphone.
+            withContext(svThread) {
+                val unpacker = SpeakerVerification.SpeakerVerificationMicController(appContext, cfg)
+                runCatching { unpacker.stop() }
+            }
+        }
+        val engine = SpeakerVerification.SpeakerVerificationEngine(cfg)
+        engine.setEnrollment(SpeakerVerification.SpeakerEnrollment.fromJson(json))
+        engine.resetStreamingState()
+
+        val (sampleRate, pcm) = Wav16.read(File(wavPath.removePrefix("file://")))
+        require(sampleRate == 16000) { "WAV must be 16 kHz. Got $sampleRate" }
+        var i = 0
+        while (i + cfg.frameSize <= pcm.size) {
+            val frame = FloatArray(cfg.frameSize) { k -> pcm[i + k] / 32768f }
+            i += cfg.frameSize
+            val out = engine.processFrame(frame)
+            if (out != null && out.type == SpeakerVerification.SpeakerVerificationOutput.Type.RESULT) {
+                val r = out.result
+                return@withContext WavVerifyResult(r.scoreBest, r.scoreMean, r.scoreWorst, r.isMatch,
+                    r.embeddingDim, r.usedSeconds)
+            }
+        }
+        error("NO_RESULT: WAV ended before the engine produced a result")
+    }
+
     companion object {
         fun isMatch(score: Float) = score.isFinite() && score >= DemoConfig.SV_DECISION_THRESHOLD
 
@@ -184,5 +232,39 @@ class SpeakerVerificationController(context: Context, private val assets: AssetI
         }
 
         private fun Map<String, Any>?.int(key: String) = (this?.get(key) as? Number)?.toInt() ?: 0
+    }
+}
+
+/** Minimal WAV reader: PCM 16-bit little-endian, mono. Returns (sampleRate, samples). */
+internal object Wav16 {
+    fun read(file: File): Pair<Int, ShortArray> {
+        val bytes = file.readBytes()
+        val bb = java.nio.ByteBuffer.wrap(bytes).order(java.nio.ByteOrder.LITTLE_ENDIAN)
+        require(bytes.size >= 12 && String(bytes, 0, 4) == "RIFF" && String(bytes, 8, 4) == "WAVE") { "Not a RIFF/WAVE file" }
+        var pos = 12
+        var channels = -1; var sampleRate = -1; var bits = -1
+        var data: ShortArray? = null
+        while (pos + 8 <= bytes.size) {
+            val id = String(bytes, pos, 4)
+            val size = bb.getInt(pos + 4)
+            val body = pos + 8
+            require(size >= 0 && body + size <= bytes.size || id == "data") { "Bad WAV chunk $id" }
+            when (id) {
+                "fmt " -> {
+                    require(bb.getShort(body).toInt() == 1) { "WAV must be PCM" }
+                    channels = bb.getShort(body + 2).toInt()
+                    sampleRate = bb.getInt(body + 4)
+                    bits = bb.getShort(body + 14).toInt()
+                }
+                "data" -> {
+                    val n = minOf(size, bytes.size - body) / 2
+                    data = ShortArray(n) { bb.getShort(body + it * 2) }
+                }
+            }
+            pos = body + size + (size and 1)
+        }
+        require(channels == 1) { "WAV must be mono. Got channels=$channels" }
+        require(bits == 16) { "WAV must be 16-bit. Got bits=$bits" }
+        return sampleRate to requireNotNull(data) { "WAV has no data chunk" }
     }
 }

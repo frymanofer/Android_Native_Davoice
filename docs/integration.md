@@ -1,7 +1,8 @@
 # Integrating DaVoice into your own Android app
 
 This page has the minimum code for each feature. The example app wraps each one in a controller under
-`app/src/main/java/io/davoice/example/voice/` that you can copy as is.
+`app/src/main/java/io/davoice/example/voice/` that you can copy as is. The controllers have the same API as the React
+Native packages; [api.md](api.md) lists every call.
 
 ## 1. Gradle
 
@@ -35,7 +36,9 @@ android {
 }
 
 dependencies {
-    implementation("com.davoice:keyworddetection:1.0.0")   // wake word, speaker verification, ONNX Runtime
+    implementation("com.davoice:keyworddetection:1.0.12")  // wake word, speaker verification, ONNX Runtime
+    // or the low-footprint build (no Arm Compute Library, ~24 MB smaller, same API):
+    // implementation("com.davoice:keyworddetection-lowfp:1.0.2")
     implementation("com.davoice:tts:1.0.0")                // TTS + STT (needs keyworddetection for ONNX Runtime)
     implementation("com.davoice:llm:1.0.0")                // local LLM (llama.cpp)
 
@@ -128,6 +131,10 @@ val stt = STT(context, /* continuous = */ true)
 stt.delegate = object : STTDelegate {
     override fun onSpeechPartialResults(list: List<String>) { /* live text */ }
     override fun onSpeechResults(best: String, all: List<String>) { }
+    // With speaker verification on, these carry the speakers heard in the sentence. By default
+    // they call the two above, so override them only if you need the speaker ids.
+    override fun onSpeechPartialResults(list: List<String>, speakerIds: List<String>, speakerId: String?) { }
+    override fun onSpeechResults(best: String, all: List<String>, speakerIds: List<String>, speakerId: String?) { }
     override fun onSpeechStart() {}
     override fun onSpeechEnd() {}
     override fun onSpeechError(code: Int, message: String) {}

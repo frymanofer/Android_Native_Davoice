@@ -26,6 +26,15 @@ remote LLM.
 
 More questions? Contact us at info@DaVoice.io
 
+## Two example apps
+
+| Folder | What it is |
+|---|---|
+| [`app/`](app/) | The voice demo: wake word, speaker verification, STT, TTS with three voices, a local LLM and Gemini, chosen from a mode menu. |
+| [`example_car_agent/`](example_car_agent/) | **DaVoice Car Agent:** an on-device voice assistant for a simulated car (the DaVoice Automotive Agent model, 11 languages, conversation modes). The same app as the React Native and Flutter `example_car_agent`. See its [README](example_car_agent/README.md). |
+
+Both build from this folder: `./gradlew :app:installFullDebug` or `./gradlew :example_car_agent:installFullDebug`.
+
 ## What the demo shows
 
 1. **Intro.** The selected voice introduces the demo. Tap *Skip Narration* or say the wake word to skip ahead.
@@ -85,13 +94,10 @@ The app has two product flavors that differ only in the wake-word engine:
 ./gradlew :app:installFullDebug      # or installLiteDebug
 ```
 
-The flavors pull different wake-word AARs: `full` → `com.davoice:keyworddetection:1.0.0` (ACL), `lite` →
-`com.davoice:keyworddetection-lowfp:1.0.1` (no ACL). Both are in `libs/`. The ACL choice is a build-time toggle in
+The flavors pull different wake-word AARs: `full` → `com.davoice:keyworddetection:1.0.12` (ACL), `lite` →
+`com.davoice:keyworddetection-lowfp:1.0.2` (no ACL). Both are in `libs/`. The ACL choice is a build-time toggle in
 the library itself — the low-footprint AAR never calls the ACL execution provider. TTS and the local LLM are the same
 in both flavors. The two apps have different application IDs, so you can install both side by side.
-
-> Regenerating the AARs: in the private `AndroidLibraryCode` repo, `build.sh` builds the regular (ACL) wake-word AAR
-> and `build_lowfp.sh` builds the low-footprint one; `cp_lib.sh` copies both into this repo's `libs/`.
 
 ### License key
 
@@ -136,12 +142,14 @@ app/src/main/java/io/davoice/example/
 | You want | Copy | AARs |
 |---|---|---|
 | Wake word only | `WakewordController.kt`, a `.dm` wake-word model + `layer1.dm` | keyworddetection |
+| Wake word on audio your app already captures (no microphone access; 2 s one-shot or streaming with a voice-activity gate) | `WakewordController.kt` (`detectOnce`, `startKeywordDetectionExternal` + `pushAudio`; see [docs/api.md](docs/api.md#your-own-audio-no-microphone)), a `.dm` wake-word model + `layer1.dm` | keyworddetection |
 | Speaker verification | `SpeakerVerificationController.kt`, `AssetInstaller.kt`, `sv.dm` | keyworddetection |
 | STT and/or TTS | `SpeechController.kt`, `AssetInstaller.kt`, a voice model; `TranscriptMerger.kt` for continuous dictation | tts **+ keyworddetection** (it provides ONNX Runtime) |
 | Wake word → STT → TTS handoff | the above, plus the pause/resume sequence in `VoiceDemo.onWakeWord` / `enterMode` | keyworddetection, tts |
 | Local LLM | `LocalLlm.kt`, `SpokenText.kt` for speaking streamed replies | llm |
 
 Minimal code per feature, and the Gradle setup: [docs/integration.md](docs/integration.md).
+Every React Native call and its native equivalent: [docs/api.md](docs/api.md).
 
 ## Models
 
@@ -164,6 +172,18 @@ For a custom wake word ("Hey <your brand>"), contact info@davoice.io with your p
 it in `app/src/main/assets/` and add it to `DemoConfig.WAKE_WORDS`. Several wake words can run at once.
 
 For a custom or cloned TTS voice, contact info@davoice.io.
+
+## Learn more on davoice.io
+
+- [On-device voice-to-voice AI agent SDK](https://davoice.io/voice-agent-sdk): wake word, speech to text, a local LLM with tool calling and text to speech, with no per-token API fees
+- [Android wake word detection in Kotlin](https://davoice.io/integration-guides-wake-word/android)
+- [Wake word benchmark](https://davoice.io/wake-word-benchmark): two independent customer studies, DaVoice vs. commercial engines and openWakeWord
+- [On-device speech to text SDK](https://davoice.io/speech-to-text): real-time and offline, no per-minute fees
+- [On-device text to speech SDK and TTS API](https://davoice.io/text-to-speech): natural voices and voice cloning, no per-character fees
+- [Run an LLM on the phone for a voice agent](https://davoice.io/voice-agent-guide/on-device-llm)
+- [On-device tool calling for voice agents](https://davoice.io/voice-agent-guide/tool-calling)
+- [Free online text to speech](https://davoice.io/free-text-to-speech): free and unlimited, with no sign-up, no login and no subscription. Natural AI voices in 11 languages, voice cloning, MP3 and WAV download, generated in your browser
+- [Pricing](https://davoice.io/pricing): free license for proof-of-concept, academic and non-commercial projects
 
 ## Related
 

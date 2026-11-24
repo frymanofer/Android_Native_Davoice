@@ -19,3 +19,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Android_Native_Davoice"
 include(":app")
+// The DaVoice Car Agent (the same app as the React Native and Flutter example_car_agent).
+include(":example_car_agent")

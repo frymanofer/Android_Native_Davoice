@@ -86,8 +86,8 @@ dependencies {
     // keyworddetection also provides ONNX Runtime, which the tts AAR uses at
     // runtime -- include it even if you only need TTS.
     // Wake word: ACL build for "full", no-ACL low-footprint build for "lite".
-    "fullImplementation"("com.davoice:keyworddetection:1.0.14")
-    "liteImplementation"("com.davoice:keyworddetection-lowfp:1.0.4")
+    "fullImplementation"("com.davoice:keyworddetection:1.0.15")
+    "liteImplementation"("com.davoice:keyworddetection-lowfp:1.0.5")
     implementation("com.davoice:tts:1.0.0")
     implementation("com.davoice:llm:1.0.0")
 

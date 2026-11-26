@@ -249,11 +249,13 @@ object FollowUp {
     private val offerVerbs = mapOf(
         "en" to listOf(
             re("^close\\b", ignoreCase = true) to Regex("^(?:close|shut)$"),
+            re("^open\\b", ignoreCase = true) to Regex("^open$"),
             re("^lock\\b", ignoreCase = true) to Regex("^lock$"),
             re("^(?:heat|cool)\\b", ignoreCase = true) to Regex("^(?:turn on|switch on|heat|cool|turn on)$"),
         ),
         "pt" to listOf(
             re("^fecha\\b", ignoreCase = true) to Regex("^(?:fecha|fechar|feche|pode fechar)$"),
+            re("^abre\\b", ignoreCase = true) to Regex("^(?:abre|abrir|abra|pode abrir)$"),
             re("^tranca\\b", ignoreCase = true) to Regex("^(?:tranca|trancar|tranque|pode trancar)$"),
             re("^(?:esquenta|refresca)\\b", ignoreCase = true) to Regex("^(?:liga|ligar|ligue|pode ligar|esquenta|refresca)$"),
         ),
@@ -364,7 +366,39 @@ object FollowUp {
             pending = Pending("seat", seats)
             return TurnInput(reply = whichSeat[lang])
         }
+        // something the car can't do, with the action it can ("Lock the sunroof" -> close it): asked, nothing runs without a yes
+        val near = nearMiss(userText, lang)
+        if (near != null) {
+            pending = Pending("command", near.second)
+            return TurnInput(reply = near.first)
+        }
         return TurnInput(text = canonical(userText, lang) ?: userText)
+    }
+
+    /**
+     * "Lock the sunroof" / "Unlock the windows": the car has no such lock (2026-11-25 iPhone: the model declined and the driver heard "not
+     * available in this demo"). The app says what it can do instead and asks; a yes ("Yes", "Close it") sends that request to the agent.
+     * (reply, request) or null.
+     */
+    private fun nearMiss(userText: String, lang: String): Pair<String, String>? {
+        val f = fold(userText)
+        if (lang == "en") {
+            val m = Regex("^(?:(?:can|could|would|will) you |please )*(lock|unlock) (?:up )?(?:the |my |our |all the |all )?(sunroof|moonroof|roof|windows)(?: please| for me)?$").find(f) ?: return null
+            val lock = m.groupValues[1] == "lock"
+            val roof = m.groupValues[2] != "windows"
+            val what = if (roof) "the sunroof" else "the windows"
+            val verb = if (lock) "close" else "open"
+            val it = if (roof) "it" else "them"
+            return "I can't ${m.groupValues[1]} $what, but I can $verb $it. Want me to $verb $it?" to
+                (if (roof) "${if (lock) "Close" else "Open"} the sunroof" else "${if (lock) "Close" else "Open"} all the windows")
+        }
+        // pt-BR: every sentence about six words or more; both tested 2026-11-25 (brv3 voice, 5/5 heard right; "Quer que eu feche..." was 3/5) (car/SpeechComposer.kt, the pt-BR voice)
+        val m = Regex("^(?:(?:voce|vc) pode |pode |por favor )*(tranca|trancar|tranque|destranca|destrancar|destranque) (?:o |os |as |todos os |todas as )?(teto solar|teto|vidros|janelas)(?: do carro)?(?: por favor| pra mim)?$").find(f) ?: return null
+        val lock = !m.groupValues[1].startsWith("des")
+        val roof = m.groupValues[2].startsWith("teto")
+        val said = if (roof) "o teto solar do carro" else "as janelas do carro"
+        return "Não consigo ${if (lock) "trancar" else "destrancar"} $said. Posso ${if (lock) "fechar" else "abrir"} ${if (roof) "o teto solar" else "todas as janelas"} para você?" to
+            (if (roof) "${if (lock) "Fecha" else "Abre"} o teto solar" else "${if (lock) "Fecha" else "Abre"} todos os vidros")
     }
 
     /** After the agent's reply: remember a question the next short answer completes. [sent] = what went to the agent for this request. */

@@ -54,7 +54,7 @@ class ConversationTest {
 
     @Test fun `defaults keep today's behaviour`() {
         assertEquals(
-            Json.parse("""{"interrupt":false,"wakeWord":false,"wakeWordMode":{"endOfSpeechMs":2000,"listenMs":8000,"followUpMs":8000,"preFetchMs":2000,"stopWord":false},"freeMode":{"endOfSpeechMs":2000,"idleMs":0}}"""),
+            Json.parse("""{"interrupt":false,"wakeWord":false,"wakeWordMode":{"endOfSpeechMs":1500,"listenMs":8000,"followUpMs":8000,"preFetchMs":2000,"stopWord":false},"freeMode":{"endOfSpeechMs":1500,"idleMs":0}}"""),
             Json.parse(Json.stringify(defaultConversationSettings.toJson())),
         )
         assertEquals("Just talk · take turns", defaultConversationSettings.description)
@@ -64,7 +64,7 @@ class ConversationTest {
         assertEquals(defaultConversationSettings, normalizeConversationSettings(null))
         val s = normalizeConversationSettings(Json.parse("""{"interrupt":true,"wakeWord":"yes","extra":1,"wakeWordMode":{"endOfSpeechMs":50,"followUpMs":-5,"preFetchMs":99999,"listenMs":7000.4,"stopWord":false},"freeMode":{"idleMs":"x"}}"""))
         assertEquals(
-            Json.parse("""{"interrupt":true,"wakeWord":false,"wakeWordMode":{"endOfSpeechMs":500,"listenMs":7000,"followUpMs":0,"preFetchMs":3000,"stopWord":false},"freeMode":{"endOfSpeechMs":2000,"idleMs":0}}"""),
+            Json.parse("""{"interrupt":true,"wakeWord":false,"wakeWordMode":{"endOfSpeechMs":500,"listenMs":7000,"followUpMs":0,"preFetchMs":3000,"stopWord":false},"freeMode":{"endOfSpeechMs":1500,"idleMs":0}}"""),
             Json.parse(Json.stringify(s.toJson())),
         )
     }

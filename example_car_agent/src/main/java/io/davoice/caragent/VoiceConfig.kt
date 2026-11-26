@@ -8,7 +8,7 @@ import io.davoice.caragent.util.Obj
 object VoiceConfig {
     /** Temporary DaVoice demo license, valid for every DaVoice library (wake word, speaker verification, STT/TTS, local LLM).
      *  Contact info@davoice.io for your own key. */
-    const val DAVOICE_LICENSE_KEY = "MTc5NjA3NjAwMDAwMA==-FmI0i6C8wjKqQwmvi/PAmUy9ayviOGvWhGLFGHZrg9I="
+    const val DAVOICE_LICENSE_KEY = "MTc5ODc1NDQwMDAwMA==-7KCvF57wMK128lYxCF+vaGra6UgeDY6QF7qnDVgGHhw="
 
     data class WakeWordModel(val assetName: String, val threshold: Float, val bufferCount: Int, val msBetweenCallbacks: Long)
 

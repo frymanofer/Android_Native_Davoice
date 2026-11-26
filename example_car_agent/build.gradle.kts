@@ -66,8 +66,8 @@ android {
 }
 
 dependencies {
-    "fullImplementation"("com.davoice:keyworddetection:1.0.14")
-    "liteImplementation"("com.davoice:keyworddetection-lowfp:1.0.4")
+    "fullImplementation"("com.davoice:keyworddetection:1.0.15")
+    "liteImplementation"("com.davoice:keyworddetection-lowfp:1.0.5")
     implementation("com.davoice:tts:1.0.0")
     implementation("com.davoice:llm:1.0.0")
 

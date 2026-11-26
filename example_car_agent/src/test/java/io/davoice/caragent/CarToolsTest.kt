@@ -188,17 +188,17 @@ class CarToolsTest {
     }
 
     @Test fun `several actions are said as one sentence (the other apps' composer cases)`() {
-        assertEquals("All set. I closed all the doors and locked the car. Everything is secure.",
+        assertEquals("I closed all the doors and locked the car. Everything is secure.",
             compose(listOf(Triple("close_doors", "I closed all the doors.", true), Triple("lock_car", "I locked the car.", true)), "I closed all the doors. I locked the car."))
-        assertEquals("All set. I unlocked the car and opened all the doors. Come on in!",
+        assertEquals("I unlocked the car and opened all the doors. Come on in!",
             compose(listOf(Triple("unlock_car", "I unlocked the car.", true), Triple("open_door", "I opened all the doors.", true)), "I unlocked the car. I opened all the doors."))
-        assertEquals("Pronto, já fiz isso para você. Fechei todas as janelas, fechei todas as portas e tranquei o carro. Agora o carro está todo seguro.",
+        assertEquals("Fechei todas as janelas, fechei todas as portas e tranquei o carro. Agora o carro está todo seguro.",
             compose(listOf(Triple("set_window", "Fechei todas as janelas.", true), Triple("close_doors", "Fechei todas as portas.", true), Triple("lock_car", "Tranquei o carro.", true)),
                 "Fechei todas as janelas. Fechei todas as portas. Tranquei o carro.", "pt-BR"))
-        assertEquals("Sure, you got it. I locked the car. You're good to go.", compose(listOf(Triple("lock_car", "I locked the car.", true)), "I locked the car."))
-        assertEquals("Claro, já fiz isso para você. Destranquei todas as portas do carro. Pode entrar, o carro já está aberto.", compose(listOf(Triple("unlock_car", "Destranquei o carro.", true)), "Destranquei o carro.", "pt-BR"))
+        assertEquals("I locked the car. You're good to go.", compose(listOf(Triple("lock_car", "I locked the car.", true)), "I locked the car."))
+        assertEquals("Destranquei todas as portas do carro. Pode entrar, o carro já está aberto.", compose(listOf(Triple("unlock_car", "Destranquei o carro.", true)), "Destranquei o carro.", "pt-BR"))
         // pt-BR: a short sentence said on its own is said longer (tested wording, as the RN example)
-        assertEquals("Claro, já fiz isso para você. Tranquei todas as portas do carro. Pode ficar tranquilo, está tudo seguro.", compose(listOf(Triple("lock_car", "Tranquei o carro.", true)), "Tranquei o carro.", "pt-BR"))
+        assertEquals("Tranquei todas as portas do carro. Pode ficar tranquilo, está tudo seguro.", compose(listOf(Triple("lock_car", "Tranquei o carro.", true)), "Tranquei o carro.", "pt-BR"))
         assertEquals("Navigating home: about 24 minutes, 18 km. Let's go!",
             compose(listOf(Triple("navigate_to", "Navigating to home: about 24 minutes, 18 km.", true)), "Navigating to home: about 24 minutes, 18 km.", "en", true))
     }

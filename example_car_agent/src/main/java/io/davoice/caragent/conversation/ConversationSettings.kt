@@ -49,8 +49,8 @@ data class ConversationSettings(val interrupt: Boolean, val wakeWord: Boolean, v
 val defaultConversationSettings = ConversationSettings(
     interrupt = false,
     wakeWord = false,
-    wakeWordMode = WakeWordModeSettings(endOfSpeechMs = 2000, listenMs = 8000, followUpMs = 8000, preFetchMs = 2000, stopWord = false),
-    freeMode = FreeModeSettings(endOfSpeechMs = 2000, idleMs = 0),
+    wakeWordMode = WakeWordModeSettings(endOfSpeechMs = 1500, listenMs = 8000, followUpMs = 8000, preFetchMs = 2000, stopWord = false),
+    freeMode = FreeModeSettings(endOfSpeechMs = 1500, idleMs = 0),
 )
 
 data class Choice(val value: Int, val label: String)

@@ -253,11 +253,14 @@ object SpeechComposer {
 
     /** One action that ran, said with a warm opener (none when the car already said "Got it.") and, every other time, its closing line. */
     private fun friendlyOne(a: CarTurnAction, lang: String, acked: Boolean, driving: Boolean): String {
+        // ONE friendly phrase (2026-11-25: opener + sentence + closing line made every reply long): every other time the closing
+        // line when there is one, else a warm opener
         val v = variant++
+        val tail = if (v % 2 == 0) friendlyTail(a, lang, driving) else null
+        if (tail != null) return "${a.say} $tail"
         val list = friendlyOpeners[lang]!!
         val opener = if (acked) "" else "${list[v % list.size]} "
-        val tail = if (v % 2 == 0) friendlyTail(a, lang, driving) else null
-        return "$opener${a.say}${if (tail != null) " $tail" else ""}"
+        return "$opener${a.say}"
     }
 
     /** "I closed all the doors." -> "closed all the doors" (en); "Fechei todas as portas." -> "fechei todas as portas" (pt); else null. */
@@ -296,7 +299,9 @@ object SpeechComposer {
                 if (tail != null) break
             }
         }
-        return "$opener $sentence.${if (secures) " ${secure[lang]}" else ""}${if (tail != null) " $tail" else ""}"
+        // one extra phrase at most (2026-11-25, the reply is said before the driver can talk again): the closing line, else the opener
+        val extra = if (secures) secure[lang] else tail
+        return if (extra != null) "$sentence. $extra" else "$opener $sentence."
     }
 
     /** The reply text as the driver should hear it. [text] = what the agent said (core order); [actions] = this turn's tool sentences. */

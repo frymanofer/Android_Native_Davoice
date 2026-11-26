@@ -1,6 +1,6 @@
 # Android Native On-Device Voice AI by DaVoice
 
-[License](LICENSE) · [Model and Voice Asset Notice](MODEL_NOTICES.md)
+[License](LICENSE) · [Model and Voice Asset Notice](MODEL_NOTICES.md) · [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 ### Wake word, speaker verification, speech to text, text to speech and a local LLM. Native Kotlin, no React Native.
 
@@ -192,4 +192,4 @@ For a custom or cloned TTS voice, contact info@davoice.io.
 
 ## License
 
-The example code is MIT (see [LICENSE](LICENSE)). The DaVoice libraries and models need a DaVoice license key.
+The example code is MIT (see [LICENSE](LICENSE)). The DaVoice libraries and models need a DaVoice license key and are not covered by the MIT license: see [MODEL_NOTICES.md](MODEL_NOTICES.md). The open models the apps can download and the third-party code inside the LLM library are credited in [MODEL_NOTICES.md](MODEL_NOTICES.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

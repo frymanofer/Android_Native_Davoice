@@ -1,5 +1,6 @@
 package io.davoice.caragent
 
+import io.davoice.caragent.flow.silenceFor
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -402,8 +403,11 @@ class CarAgentApp(private val context: Context, private val scope: CoroutineScop
         val forModel = if (wakePrefixPending && conversationSettings.wakeWord) dropWakePhrase(lastTranscript, VoiceConfig.WAKE_PHRASE) else lastTranscript
         if (forModel.isNotEmpty()) scope.launch { llm.prefill(chat.toList(), forModel) }
         silenceJob?.cancel()
+        // words that cannot end a request ("Set the", "Please") wait longer (flow/EndOfSpeech.kt)
+        val wait = silenceFor(forModel, conversationSettings.endOfSpeechMs, AppLanguage.current)
+        if (wait != conversationSettings.endOfSpeechMs) Log.i(tag, "[AIChat] sounds unfinished, waiting $wait ms: \"$forModel\"")
         silenceJob = scope.launch {
-            delay(conversationSettings.endOfSpeechMs.toLong())
+            delay(wait.toLong())
             val t = lastTranscript.trim()
             if (t.isNotEmpty() && !inFlight) answer(t)
         }

@@ -20,3 +20,20 @@ for training or to create derivative models unless expressly permitted.
 The MIT license for the example source code does not apply to the model files
 or voice assets. Model-specific permissions control where they impose
 additional requirements or restrictions.
+
+## The on-device LLM (only if you use the DaVoice LLM library, `libs/com/davoice/llm/1.0.0/llm-1.0.0.aar`)
+
+This section applies to the apps and features that use the on-device LLM: `example_car_agent` (the car agent) and the Local AI Chat in `app`. Apps that use only
+the wake word, speaker verification, speech to text or text to speech do not download these models. Each app
+downloads only the models you pick.
+
+| Model | Downloaded from | License |
+|---|---|---|
+| DaVoice Automotive Agent 0.6B | DaVoice (download) | A fine-tuned and quantized derivative of [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) by the Qwen team (Alibaba Cloud), [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0). DaVoice fine-tuned it for in-car commands and quantized it to q4_0; the DaVoice changes and weights are covered by the terms above. |
+| Qwen2.5 1.5B Instruct | Hugging Face (Qwen) | [Apache 2.0](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/blob/main/LICENSE). |
+| Gemma 3n E2B, Gemma 3n E4B | Hugging Face (GGUF conversion by unsloth) | Gemma is provided under and subject to the Gemma Terms of Use found at [ai.google.dev/gemma/terms](https://ai.google.dev/gemma/terms), including the [Gemma Prohibited Use Policy](https://ai.google.dev/gemma/prohibited_use_policy). |
+| Router embedding model (all-MiniLM-L6-v2, Q8_0) | DaVoice (download) | [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) by the Sentence Transformers project, [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0), converted to GGUF. |
+| A model you add by URL in the model picker | wherever you download it | Its own license. You are responsible for following it. |
+
+The licenses of the open base models apply to those models. Third-party code inside the LLM library is listed
+in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

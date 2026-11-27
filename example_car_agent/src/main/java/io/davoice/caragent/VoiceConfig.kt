@@ -8,7 +8,7 @@ import io.davoice.caragent.util.Obj
 object VoiceConfig {
     /** Temporary DaVoice demo license, valid for every DaVoice library (wake word, speaker verification, STT/TTS, local LLM).
      *  Contact info@davoice.io for your own key. */
-    const val DAVOICE_LICENSE_KEY = "MTc5ODc1NDQwMDAwMA==-7KCvF57wMK128lYxCF+vaGra6UgeDY6QF7qnDVgGHhw="
+    const val DAVOICE_LICENSE_KEY = "DV2.eyJ2IjoyLCJraWQiOiJrMSIsImlkIjoiMzI4NWRhMmIxNDU2IiwiY3VzdCI6IkRhVm9pY2UgZGVtbyBhcHAgQW5kcm9pZF9OYXRpdmVfRGF2b2ljZS9leGFtcGxlX2Nhcl9hZ2VudCAoZXhhY3QgYXBwIGlkcyBvbmx5KSIsImlhdCI6MTc5NTcxMTA3NjE2MSwiZXhwIjoxODMwMjk3NjAwMDAwLCJwcm9kIjpbIioiXSwicGxhdCI6WyJhbmRyb2lkIl0sImFwcHMiOnsiYW5kcm9pZCI6WyJpby5kYXZvaWNlLmNhcmFnZW50Il19LCJtb2RlbHMiOlsidHRzLyoiLCJ3dy8qIl19.p_HToxoaWAPN1ZpJ1c4_JuMvWesS0lk9tdTfLf2LHQPHcwMWZKde_7ShkyWyKOOo818ySz4taSQ7tXe1_17kSQ"
 
     data class WakeWordModel(val assetName: String, val threshold: Float, val bufferCount: Int, val msBetweenCallbacks: Long)
 
